@@ -1,0 +1,19 @@
+.element {
+	position: relative;
+  display: grid;
+  background-color: #ffff;
+  border-radius: 10px;
+  max-width: 282px;
+}
+
+@media (max-width: 720px) {
+  .element {
+    margin: 0;
+  }
+}
+
+@media (max-width: 320px) {
+  .element {
+    max-width: 282px;
+  }
+}

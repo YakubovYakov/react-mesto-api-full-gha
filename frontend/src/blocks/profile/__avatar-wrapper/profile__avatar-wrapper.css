@@ -1,0 +1,30 @@
+/* .profile__avatar-wrapper {
+	background-color: rgba(0, 0, 0, .8);
+	background-image: url(../../../images/pencil1.svg);
+	background-position: 50%;
+	background-repeat: no-repeat;
+	background-size: 26px;
+	border-radius: 50%;
+	height: 125px;
+	opacity: 0;
+	position: absolute;
+	transition: opacity .1s ease-in;
+	translate: -1px -1px;
+	width: 125px;
+	z-index: 2;
+}
+
+.profile__avatar-wrapper::after {
+		content: '';
+    display: block;
+    max-width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    background-color: #2A2C2F;
+    opacity: .3;
+    transition: .4s ease-in-out;
+} */
