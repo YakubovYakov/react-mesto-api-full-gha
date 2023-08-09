@@ -1,0 +1,7 @@
+.profile__person {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 25px;
+	justify-content: center;
+}

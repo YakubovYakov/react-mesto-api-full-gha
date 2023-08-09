@@ -1,0 +1,7 @@
+.element__likes-container {
+	position: relative;
+  top: 30%;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;	
+}

@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const crypto = require('crypto'); // экспортируем crypto
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -52,6 +55,7 @@ app.use((err, req, res, next) => {
   } else {
     res.status(INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
+
   next();
 });
 
