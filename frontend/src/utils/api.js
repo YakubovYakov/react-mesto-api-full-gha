@@ -16,6 +16,7 @@ class Api {
 
   getUserData() {
     return fetch(this._userUrl, {
+			credentials: 'include',
       headers: this._headers,
     }).then((res) => {
       if (res.ok) {
@@ -27,6 +28,7 @@ class Api {
 
   saveUserChanges({ name, about }) {
     return fetch(this._userUrl, {
+			credentials: 'include',
       method: "PATCH",
       headers: {
         authorization: this._token,
@@ -46,6 +48,7 @@ class Api {
 
   changedAvatar(src) {
     return fetch(`${this._userUrl}/avatar`, {
+			credentials: 'include',
       method: "PATCH",
       headers: {
         authorization: this._token,
@@ -64,6 +67,7 @@ class Api {
 
   setUserInfo(name, about) {
     return fetch(`${this._baseUrl}/users/me`, {
+			credentials: 'include',
       headers: this._headers,
       method: "PATCH",
       body: JSON.stringify({
@@ -88,6 +92,7 @@ class Api {
 		link
 	}) {
 		return fetch(this._cardsUrl, {
+			credentials: 'include', 
 			method: "POST",
 			headers: {
 				authorization: this._token,
@@ -108,6 +113,7 @@ class Api {
 
   changeLikeCardStatus(id, isNotLiked) {
     return fetch(`${this._likesUrl}/${id}`, {
+			credentials: 'include',
       method: isNotLiked ? "PUT" : "DELETE",
       headers: this._headers,
     }).then((res) => {
@@ -120,6 +126,7 @@ class Api {
 
 	deleteCard(id) {
 		return fetch(`${this._cardsUrl}/${id}`, {
+			credentials: 'include',
 			method: 'DELETE',
 			headers: {
 				authorization: this._token,
@@ -134,7 +141,7 @@ class Api {
 
 }
 const api = new Api({
-  baseUrl: "https://mesto.nomoreparties.co/v1/cohort-64",
+  baseUrl: "https://mesto.nomoreparties.co/v1/cohort-65",
   headers: {
     authorization: "2ceb7c58-7c31-4d20-a44d-d2bf37d02e88",
     "Content-Type": "aaplication/json",

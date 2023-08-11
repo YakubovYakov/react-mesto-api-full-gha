@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const crypto = require('crypto'); // экспортируем crypto
-
+const cors = require("cors");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const routeSignup = require('./routes/signup');
@@ -22,13 +22,14 @@ const NotFoundError = require('./errors/NotFoundError');
 const INTERNAL_SERVER_ERROR = 500;
 
 const URL = 'mongodb://127.0.0.1:27017/mestodb';
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 mongoose.set('strictQuery', true);
 
 mongoose.connect(URL);
 
 const app = express();
+app.use(cors({ origin: ['http://localhost:3000'], credentials: true, maxAge: 30 }));
 
 app.use(helmet());
 

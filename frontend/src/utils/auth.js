@@ -1,3 +1,5 @@
+//export const BASE_URL = "http://localhost:3001";
+
 export const BASE_URL = "https://auth.nomoreparties.co";
 
 const checkResponce = (res) => 
@@ -14,15 +16,17 @@ export const register = ({email, password}) => {
   }).then((res) => checkResponce(res))
 };
 
-export const login = (password, email) => {
+export const login = (email, password) => {
 	return fetch(`${BASE_URL}/signin`, {
 		method: "POST",
+		credentials: 'include',
 		headers: {
-			'Accept': 'application/json',
+			// 'Accept': 'application/json',
       'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({password, email})
-	}).then((res) => checkResponce(res))
+		body: JSON.stringify({ email, password })
+	})
+		.then(res => checkResponce(res))
 };
 
 // export const login = ({email, password}) => {
