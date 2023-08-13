@@ -14,10 +14,12 @@ class Api {
       : Promise.reject(`${method}: ${response.status}`);
   }
 
-  getUserData() {
-    return fetch(this._userUrl, {
-			credentials: 'include',
-      headers: this._headers,
+  getUserData(token) {
+    return fetch(`users/me`, {
+      headers: {
+				...this.headers,
+				Authorization: `Bearer ${token}`
+			}
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -26,13 +28,14 @@ class Api {
     });
   }
 
-  saveUserChanges({ name, about }) {
+  saveUserChanges({ name, about, token }) {
     return fetch(this._userUrl, {
-			credentials: 'include',
       method: "PATCH",
       headers: {
-        authorization: this._token,
-        "Content-Type": "application/json",
+				headers: {
+					...this.headers,
+					Authorization: `Bearer ${token}`,
+				}
       },
       body: JSON.stringify({
         name: name,
@@ -46,14 +49,13 @@ class Api {
     });
   }
 
-  changedAvatar(src) {
+  changedAvatar(src, token) {
     return fetch(`${this._userUrl}/avatar`, {
-			credentials: 'include',
       method: "PATCH",
       headers: {
-        authorization: this._token,
-        "Content-Type": "application/json",
-      },
+				...this.headers,
+				Authorization: `Bearer ${token}`,
+			},
       body: JSON.stringify({
         avatar: src,
       }),
@@ -65,10 +67,12 @@ class Api {
     });
   }
 
-  setUserInfo(name, about) {
+  setUserInfo(name, about, token) {
     return fetch(`${this._baseUrl}/users/me`, {
-			credentials: 'include',
-      headers: this._headers,
+      headers: {
+				...this.headers,
+				Authorization: `Bearer ${token}`,	
+			},
       method: "PATCH",
       body: JSON.stringify({
         name: name,
@@ -79,8 +83,14 @@ class Api {
     });
   }
 
-  getInitialCards() {
-    return fetch(`${this._baseUrl}/cards`, { headers: this._headers }).then(
+  getInitialCards(token) {
+    return fetch(`${this._baseUrl}/cards`, { 
+			headers: {
+				...this.headers,
+				Authorization: `Bearer ${token}`
+			}
+		 })
+			.then(
       (res) => {
         return this._checkResponse(res, "getInitialCards");
       }
@@ -89,14 +99,14 @@ class Api {
 
 	postNewCard({
 		name,
-		link
+		link,
+		token
 	}) {
 		return fetch(this._cardsUrl, {
-			credentials: 'include', 
 			method: "POST",
 			headers: {
-				authorization: this._token,
-        "Content-Type": "application/json",
+				...this.headers,
+				Authorization: `Bearer ${token}`,	
 			},
 			body: JSON.stringify({
         name: name,
@@ -111,11 +121,13 @@ class Api {
 		
 	}
 
-  changeLikeCardStatus(id, isNotLiked) {
+  changeLikeCardStatus(id, isNotLiked, token) {
     return fetch(`${this._likesUrl}/${id}`, {
-			credentials: 'include',
       method: isNotLiked ? "PUT" : "DELETE",
-      headers: this._headers,
+      headers: {
+				...this.headers,
+				Authorization: `Bearer ${token}`,	
+			},
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -124,13 +136,13 @@ class Api {
     });
   }
 
-	deleteCard(id) {
+	deleteCard(id, token) {
 		return fetch(`${this._cardsUrl}/${id}`, {
-			credentials: 'include',
 			method: 'DELETE',
 			headers: {
-				authorization: this._token,
-			}
+				...this.headers,
+				Authorization: `Bearer ${token}`,	
+			},
 		}).then((res) => {
       if (res.ok) {
         return res.json();
@@ -143,8 +155,7 @@ class Api {
 const api = new Api({
   baseUrl: "http://localhost:3000",
   headers: {
-    authorization: "2ceb7c58-7c31-4d20-a44d-d2bf37d02e88",
-    "Content-Type": "aaplication/json",
+    "Content-Type": "application/json",
   },
 });
 

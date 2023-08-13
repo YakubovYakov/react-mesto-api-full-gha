@@ -18,7 +18,7 @@ import { useState } from "react";
 import EditAvatarPopup from "./EditAvatarPopup";
 import InfoTooltip from "./InfoTooltip";
 
-import * as auth from "../utils/auth.js";
+import * as auth from "../utils/auth";
 
 function App() {
   // ---------- Стейты
@@ -42,9 +42,10 @@ function App() {
 
   // ----------- При загрузке страницы получам данные карточек
   React.useEffect(() => {
+		const jwt = localStorage.getItem('jwt');
 		if(isloggedIn) {
     api
-      .getInitialCards()
+      .getInitialCards(jwt)
       .then((data) => {
         setCards(data);
       })
@@ -56,9 +57,10 @@ function App() {
 
   // ----------- При загрузке страницы получам данные пользователя
   React.useEffect(() => {
+		const jwt = localStorage.getItem('jwt');
 		if(isloggedIn) {
     api
-      .getUserData()
+      .getUserData(jwt)
       .then((data) => {
         setCurrentUser(data);
       })
@@ -70,16 +72,20 @@ function App() {
 
   //----------- При загрузке страницы проверяем токен и перенаправляем пользователя
 	React.useEffect(() => {
-		if(localStorage.getItem("jwt")) {
+		const jwt = localStorage.getItem('jwt');
 			auth
-					.checkToken()
+					.checkToken(jwt)
 					.then((res) => {
+						if (!res) {
+							return;
+						} else {
 						setIsLoggedIn(true);
 						navigate("/", {replace: true});
 						setEmail(res.data.email)
+						}
 					})
 					.catch(console.error);
-		}
+		
 	}, [navigate]);
 
   // React.useEffect(() => {
@@ -215,15 +221,16 @@ function App() {
       });
   }
 
-  function handleLogin({email, password}) {
+  function handleLogin(email, password) {
+		console.log('waddwadsa');
     auth
-      .login({email, password})
+      .login(email, password)
       .then((res) => {
+				console.log(res);
           setEmail(email);
 					setIsLoggedIn(true)
           navigate("/", { replace: true });
-          localStorage.setItem("token", res.token);
-        
+          localStorage.setItem("token", res.token);     
       })
       .catch((err) => {
         console.log(err);

@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { SECRET_KEY } = require('../utils/token');
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const Unauthorized = require('../errors/Unauthorized');
 const ConflictError = require('../errors/ConflictError');
@@ -45,20 +45,17 @@ const createUserInfo = (req, res, next) => {
 
 function login(req, res, next) {
   const { email, password } = req.body;
-
-  User.findUserByCredentials(email, password)
-    .then(({ _id: userId }) => {
-      if (userId) {
-        const token = jwt.sign({ userId }, SECRET_KEY, {
-          expiresIn: '7d',
-        });
-
-        return res.send({ token, message: 'Авторизация прошла успешно' });
-      }
-
-      throw new Unauthorized('Ошибка авторизации');
-    })
-    .catch(next);
+	
+ return User.findUserByCredentials(email, password)
+	.then((user) => {
+		const token = jwt.sign(
+			{ _id: user._id },
+			NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+			{ expiresIn: '7d' },
+		);
+		res.send({ token });
+ 	})
+  .catch(next);
 }
 
 const getUserInfo = (req, res, next) => {

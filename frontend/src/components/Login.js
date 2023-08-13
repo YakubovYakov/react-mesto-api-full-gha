@@ -21,19 +21,7 @@ const Login = ({ handleLogin }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (!userData.email || !userData.password) {
-			return;
-		}
-		const { password, email } = userData;
-		auth.login(password, email)
-			.then((data) => {
-				if(data.token) {
-					localStorage.setItem('token', data.token);
-					handleLogin();
-					navigate('/', {replace: true})
-				}
-			})
-			.catch(err => console.log(err));
+		handleLogin();
 		}
 		
 		return (
