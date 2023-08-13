@@ -33,7 +33,7 @@ function App() {
   const [isOpenedImage, setIsOpenedImage] = React.useState(false);
   const [selectedCardDeleteConfirm, setSelectedCardDeleteConfirm] =
     React.useState({ isOpen: false, card: {} });
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const [cards, setCards] = React.useState([]);
 
   // ----------- Состояния авторизации пользователя и его данных
@@ -207,6 +207,7 @@ function App() {
     auth
       .register({ email, password })
       .then((res) => {
+				console.log(res);
         navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
@@ -214,23 +215,23 @@ function App() {
       });
   }
 
-  // function handleLogin({email, password}) {
-  //   auth
-  //     .login({email, password})
-  //     .then((res) => {
-  //         setEmail(email);
-	// 				setIsLoggedIn(true)
-  //         navigate("/", { replace: true });
-  //         localStorage.setItem("token", res.token);
+  function handleLogin({email, password}) {
+    auth
+      .login({email, password})
+      .then((res) => {
+          setEmail(email);
+					setIsLoggedIn(true)
+          navigate("/", { replace: true });
+          localStorage.setItem("token", res.token);
         
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-	const handleLogin = () => {
-		setIsLoggedIn(true);
-	}
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+	// const handleLogin = () => {
+	// 	setIsLoggedIn(true);
+	// }
 
   function handleSighOut() {
     localStorage.removeItem("token");

@@ -3,6 +3,24 @@ const Unauthorized = require('../errors/Unauthorized');
 
 const { NODE_ENV, JWT_SECRET } =process.env;
 
+
+const auth = (req, res, next) => {
+	const token = req.cookies.jwt;
+	if (!token) {
+		return next(new Unauthorized('Ошибка авторизации'));
+	}
+	let payload;
+	try {
+		payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+	} catch (err){
+		return next(new Unauthorized('Ошибка авторизации'));
+	}
+	req.user = payload;
+	return next();
+};
+
+module.exports = auth;
+
 // module.exports = (req, _, next) => {
 //   const { authorization } = req.headers;
 //   const bearer = 'Bearer ';
@@ -27,20 +45,3 @@ const { NODE_ENV, JWT_SECRET } =process.env;
 
 //   return next();
 // };
-
-const auth = (req, res, next) => {
-	const token = req.cookies.jwt;
-	if (!token) {
-		return next(new Unauthorized('Ошибка авторизации'));
-	}
-	let payload;
-	try {
-		payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
-	} catch (err){
-		return next(new Unauthorized('Ошибка авторизации'));
-	}
-	req.user = payload;
-	return next();
-};
-
-module.exports = auth;
