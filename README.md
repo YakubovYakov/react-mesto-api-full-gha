@@ -5,12 +5,12 @@
   
 Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
 
-Адрес репозитория: https://github.com/...
+Адрес репозитория: https://github.com/yaks69/react-mesto-api-full-gha
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 158.160.104.18
 
-Frontend https://...
+Frontend https://domainname.yaks.nomoreparties.co
 
-Backend https://...
+Backend https://domainname.backendyaks.nomoreparties.co
