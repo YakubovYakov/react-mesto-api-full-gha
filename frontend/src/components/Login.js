@@ -1,6 +1,5 @@
 import React, {useState}  from "react";
 import { useNavigate } from "react-router-dom";
-import * as auth from "../utils/auth" 
 
 const Login = ({ handleLogin }) => {
 	const [userData, setUserData] = useState({
@@ -21,8 +20,8 @@ const Login = ({ handleLogin }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		handleLogin();
-		}
+		handleLogin(userData.email, userData.password);
+	}
 		
 		return (
 			<section className="register page__center">
@@ -75,25 +74,5 @@ const Login = ({ handleLogin }) => {
 			</section>
 		);
 	}
-	// function Login({ onLogin }) {
-		//   const [email, setEmail] = React.useState("");
-		//   const [password, setPassword] = React.useState("");
-		
-		//   function handleChangeEmail(e) {
-			//     setEmail(e.target.value);
-			//   }
-			
-			//   function handleChangePassword(e) {
-				//     setPassword(e.target.value);
-				//   }
-				
-				//   function handleSubmit(e) {
-//     e.preventDefault();
-//     if (!email || !password) {
-//       return;
-//     }
-//     onLogin(password, email);
-//   }
-
 
 export default Login;

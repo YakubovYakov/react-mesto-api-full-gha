@@ -38,6 +38,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use('/', routeSignup);
 app.use('/', routeSignin);
 
@@ -54,7 +60,7 @@ app.use((err, req, res, next) => {
   if (err.statusCode) {
     res.status(err.statusCode).send({ message: err.message });
   } else {
-    res.status(INTERNAL_SERVER_ERROR).send({ message: 'dasdsd' });
+    res.status(INTERNAL_SERVER_ERROR).send({ message: 'Ошибка сервера' });
   }
 
   next();

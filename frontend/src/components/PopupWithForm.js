@@ -29,6 +29,7 @@ function PopupWithForm({
           className="popup__close-button"
           type="button"
           aria-label="Закрыть окно"
+					onClick={onClose}
         ></button>
       </div>
     </section>

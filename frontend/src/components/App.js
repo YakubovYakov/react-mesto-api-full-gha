@@ -24,15 +24,14 @@ function App() {
   // ---------- Стейты
   const [currentUser, setCurrentUser] = React.useState({});
 
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isAddPlacePopup, setIsAddPlacePopup] = React.useState(false);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [isOpenedImage, setIsOpenedImage] = React.useState(false);
-  const [selectedCardDeleteConfirm, setSelectedCardDeleteConfirm] =
-    React.useState({ isOpen: false, card: {} });
+  const [selectedCardDeleteConfirm, setSelectedCardDeleteConfirm] = React.useState({ isOpen: false, card: {} });
+	const [isInfoTooltip, setInfoTooltip]	= React.useState({isOpen: false, successful: false});
+
   const navigate = useNavigate();
   const [cards, setCards] = React.useState([]);
 
@@ -42,25 +41,17 @@ function App() {
 
   // ----------- При загрузке страницы получам данные карточек
   React.useEffect(() => {
-		const jwt = localStorage.getItem('jwt');
+		const jwt = localStorage.getItem('token');
 		if(isloggedIn) {
-    api
-      .getInitialCards(jwt)
+    api.getInitialCards(jwt)
       .then((data) => {
         setCards(data);
       })
       .catch((err) => {
         console.log(err);
       });
-		}
-  }, []);
 
-  // ----------- При загрузке страницы получам данные пользователя
-  React.useEffect(() => {
-		const jwt = localStorage.getItem('jwt');
-		if(isloggedIn) {
-    api
-      .getUserData(jwt)
+    api.getUserData(jwt)
       .then((data) => {
         setCurrentUser(data);
       })
@@ -68,38 +59,27 @@ function App() {
         console.log(err);
       });
 		}
-  }, []);
+  }, [isloggedIn]);
 
   //----------- При загрузке страницы проверяем токен и перенаправляем пользователя
 	React.useEffect(() => {
-		const jwt = localStorage.getItem('jwt');
+		const jwt = localStorage.getItem('token');
 			auth
 					.checkToken(jwt)
 					.then((res) => {
-						if (!res) {
-							return;
-						} else {
-						setIsLoggedIn(true);
-						navigate("/", {replace: true});
-						setEmail(res.data.email)
+            if(res) {
+              setIsLoggedIn(true);
+						  navigate("/", {replace: true});
+              setCurrentUser(res);
+						  setEmail(res.email)
+            } else {
+              setIsLoggedIn(false);
 						}
 					})
 					.catch(console.error);
 		
-	}, [navigate]);
+	}, []);
 
-  // React.useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     auth.checkToken(token).then((data) => {
-  //       if (data) {
-  //         setEmail(data.data.email);
-  //         handleLoggedIn();
-  //         navigate("/", { replace: true });
-  //       }
-  //     });
-  //   }
-  // });
 
   function handleLoggedIn() {
     setIsLoggedIn(true);
@@ -123,6 +103,10 @@ function App() {
     setIsAddPlacePopup(true);
   }
 
+	function handleInfoTooltip(result) {
+		setInfoTooltip({...isInfoTooltip, isOpen: true, successful: result})
+	}
+
   function handleDeletePlace(card) {
     setSelectedCardDeleteConfirm({
       ...selectedCardDeleteConfirm,
@@ -143,11 +127,13 @@ function App() {
       isOpen: false,
     });
     setIsOpenedImage(false);
+		setInfoTooltip(false);
   }
   //------------- Изменение данных пользователя
   function handleUpdateUser(newUserData) {
+    const jwt = localStorage.getItem('token');
     api
-      .saveUserChanges(newUserData)
+      .saveUserChanges(newUserData, jwt)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
@@ -159,8 +145,9 @@ function App() {
 
   //------------- Добавление новой карточки
   function handleAddPlaceSubmit(cardData) {
+    const jwt = localStorage.getItem('token');
     api
-      .postNewCard(cardData)
+      .postNewCard(cardData, jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -172,8 +159,8 @@ function App() {
 
   //------------- Изменение аватара пользователя
   function handleUpdateAvatar(newAvatarLink) {
-    api
-      .changedAvatar(newAvatarLink)
+    const jwt = localStorage.getItem('token');
+    api.changedAvatar(newAvatarLink, jwt)
       .then((data) => {
         setCurrentUser({ ...currentUser, avatar: data.avatar });
         closeAllPopups();
@@ -185,9 +172,10 @@ function App() {
 
   //------------- Постановка и снятие лайка
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const jwt = localStorage.getItem('token');
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, !isLiked, jwt)
       .then((newCard) => {
         const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
         setCards(newCards);
@@ -199,8 +187,9 @@ function App() {
 
   //------------ Удаление карточки
   function handleCardDelete(card) {
+    const jwt = localStorage.getItem('token');
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, jwt)
       .then(() => {
         setCards((cards) => cards.filter((c) => c._id !== card._id && c));
       })
@@ -213,27 +202,25 @@ function App() {
     auth
       .register({ email, password })
       .then((res) => {
-				console.log(res);
+				handleInfoTooltip(true);
         navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
         console.log(err);
+				handleInfoTooltip(false);
       });
   }
 
   function handleLogin(email, password) {
-		console.log('waddwadsa');
-    auth
-      .login(email, password)
+    auth.login(email, password)
       .then((res) => {
-				console.log(res);
-          setEmail(email);
-					setIsLoggedIn(true)
-          navigate("/", { replace: true });
-          localStorage.setItem("token", res.token);     
+        console.log(res);
+        localStorage.setItem('token', res.token);
+        setIsLoggedIn(true);
+        navigate('/', { replace: true });
       })
       .catch((err) => {
-        console.log(err);
+        console.log(`Error: ${err}`);
       });
   }
 	// const handleLogin = () => {
@@ -253,11 +240,10 @@ function App() {
       <CurrentUserContext.Provider value={currentUser || ""}>
         <Header />
 				<Routes>
-					<Route
-						//path="/"
+					<Route path="/"
 						element={
 							<ProtectedRoute
-								exact path="/"
+								// exact path="/"
 								component={Main}
 								onEditProfile={handleEditProfileClick}
 								onAddPlace={handleAddPlaceClick}
@@ -267,8 +253,7 @@ function App() {
 								onCardDelete={handleCardDelete}
 								cards={cards} 
 								isloggedIn={isloggedIn}
-							/>}
-						
+						/>}
 					/>
 
           <Route
@@ -314,18 +299,19 @@ function App() {
           onAddPlace={handleAddPlaceSubmit}
           onDeleteCard={handleCardDelete}
         />
-        <Footer />
-        {/* <PopupWithForm
+				<InfoTooltip result={isInfoTooltip} onClose={closeAllPopups} />
+        <PopupWithForm
           title="Вы уверены?"
           name="delete"
-          isOpened={isOpenedDelete}
+          // isOpened={isOpenedDelete}
           onClose={closeAllPopups}
           //buttonName="ДА"
         >
           <button className="popup__button" id="delete-button" type="submit">
             ДА
           </button>
-        </PopupWithForm> */}
+        </PopupWithForm>
+        <Footer />
       </CurrentUserContext.Provider>
     </div>
   );

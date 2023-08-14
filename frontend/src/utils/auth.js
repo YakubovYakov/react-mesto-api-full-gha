@@ -1,5 +1,3 @@
-//export const BASE_URL = "http://localhost:3001";
-
 export const BASE_URL = "http://localhost:3000";
 
 const checkResponce = (res) => 
@@ -26,6 +24,7 @@ export const login = (email, password) => {
 		body: JSON.stringify({ email, password })
 	})
 		.then(res => checkResponce(res))
+		
 };
 
 export const checkToken = (token) => {

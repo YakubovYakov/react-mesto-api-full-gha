@@ -43,9 +43,9 @@ const createUserInfo = (req, res, next) => {
     });
 };
 
-function login(req, res, next) {
+const login = (req, res, next) => {
   const { email, password } = req.body;
-	
+
  return User.findUserByCredentials(email, password)
 	.then((user) => {
 		const token = jwt.sign(
@@ -54,7 +54,7 @@ function login(req, res, next) {
 			{ expiresIn: '7d' },
 		);
 		res.send({ token });
- 	})
+  })
   .catch(next);
 }
 
@@ -82,8 +82,8 @@ const getUserInfoId = (req, res, next) => {
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user.userId, { name, about }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
@@ -95,8 +95,8 @@ const updateUser = (req, res, next) => {
 
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user.userId, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
@@ -107,12 +107,9 @@ const updateAvatar = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  const { userId } = req.user;
-
-  User.findById(userId)
+  User.findById(req.user._id)
     .then((user) => {
-      if (user) return res.send({ user });
-
+      if (user) return res.send(user);
       throw new NotFoundError('Пользователь с указанным id не найден');
     })
     .catch((err) => {

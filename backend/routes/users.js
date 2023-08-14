@@ -10,10 +10,12 @@ const {
   getUser,
 } = require('../controllers/users');
 const regex = require('../utils/url-regexp');
-// возвращает информацию о текущем пользователе
-router.get('/me', getUser);
+
 // Пользователи
 router.get('/', getUserInfo);
+
+// возвращает информацию о текущем пользователей
+router.get('/me', getUser);
 
 // Пользователь по ID
 router.get(
@@ -25,10 +27,9 @@ router.get(
   }),
   getUserInfoId,
 );
+
 // Обновление профиля
-router.patch(
-  '/me',
-  celebrate({
+router.patch('/me', celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
       about: Joi.string().required().min(2).max(30),
@@ -37,9 +38,7 @@ router.patch(
   updateUser,
 );
 // Обновляет аватар
-router.patch(
-  '/me/avatar',
-  celebrate({
+router.patch('/me/avatar', celebrate({
     body: Joi.object().keys({
       avatar: Joi.string().required().regex(regex),
     }),
