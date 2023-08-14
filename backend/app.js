@@ -29,7 +29,7 @@ const { PORT = 3000 } = process.env;
 mongoose.connect(URL);
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({ origin: ['http://localhost:3001', 'https://domainname.yaks.nomoreparties.co'] }));
 
 app.use(helmet());
 

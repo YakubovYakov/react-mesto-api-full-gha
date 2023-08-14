@@ -122,7 +122,7 @@ class Api {
 
 }
 export const api = new Api({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'https://domainname.backendyaks.nomoreparties.co',
   headers: {
     'Content-Type': 'application/json'
   }
