@@ -10,7 +10,11 @@ node_modules
 .npm
 
 # Optional REPL history
-.DS_Store
+.*.DS_Store
+._*
 .idea
 .vscode
 .env
+.npm
+.idea
+.
