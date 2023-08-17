@@ -1,3 +1,5 @@
+/* eslint-disable import/extensions */
+/* eslint-disable no-unused-vars */
 require('dotenv').config();
 
 const express = require('express');
@@ -6,7 +8,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const crypto = require('crypto'); // экспортируем crypto
-const cors = require("cors");
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 
 const routeSignup = require('./routes/signup.js');
@@ -24,7 +26,7 @@ const INTERNAL_SERVER_ERROR = 500;
 const URL = 'mongodb://127.0.0.1:27017/mestodb';
 const { PORT = 3000 } = process.env;
 
-//mongoose.set('strictQuery', true);
+// mongoose.set('strictQuery', true);
 
 mongoose.connect(URL);
 

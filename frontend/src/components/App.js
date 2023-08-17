@@ -217,7 +217,9 @@ function App() {
         console.log(res);
         localStorage.setItem('token', res.token);
         setIsLoggedIn(true);
+				setEmail(email);
         navigate('/', { replace: true });
+				console.log(res);
       })
       .catch((err) => {
         console.log(`Error: ${err}`);
@@ -238,7 +240,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser || ""}>
-        <Header />
+        <Header email={email} handleSighOut={handleSighOut} />
 				<Routes>
 					<Route path="/"
 						element={
