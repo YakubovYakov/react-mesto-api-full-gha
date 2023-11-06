@@ -29,6 +29,6 @@ npm start
 
 ## Ссылки на проект
 
-IP-адрес 158.160.104.18
-Frontend https://domainname.yaks.nomoreparties.co
-Backend https://domainname.backendyaks.nomoreparties.co
+1. IP-адрес 158.160.104.18
+2. Frontend https://domainname.yaks.nomoreparties.co
+3. Backend https://domainname.backendyaks.nomoreparties.co
